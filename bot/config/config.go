@@ -8,6 +8,7 @@ import (
 	"sync"
 	
 	"github.com/pelletier/go-toml/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 // Config 代表配置文件的结构
@@ -70,10 +71,10 @@ var (
 )
 
 // GetConfig 获取单例配置实例
-func GetConfig(path string) (*Config, error) {
+func GetConfig() (*Config, error) {
 	var err error
 	once.Do(func() {
-		configPath = path
+		configPath = "config.toml"
 		err = checkAndGenerateConfig(configPath)
 		if err == nil {
 			instance, err = loadConfig(configPath)
@@ -91,20 +92,23 @@ func SaveConfig() error {
 	defer mu.Unlock()
 	
 	if instance == nil {
-		return fmt.Errorf("配置尚未初始化")
+		log.Error("没有初始化配置文件")
+		return fmt.Errorf("没有初始化配置文件")
 	}
 	
 	configData, err := toml.Marshal(instance)
 	if err != nil {
+		log.Errorf("序列化配置失败: %v", err)
 		return fmt.Errorf("序列化配置失败: %v", err)
 	}
 	
 	err = os.WriteFile(configPath, configData, 0644)
 	if err != nil {
+		log.Errorf("写入配置文件失败: %v", err)
 		return fmt.Errorf("写入配置文件失败: %v", err)
 	}
 	
-	fmt.Println("配置文件已更新")
+	log.Info("配置更新完成")
 	return nil
 }
 
@@ -112,19 +116,21 @@ func SaveConfig() error {
 func checkAndGenerateConfig(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		// 如果文件不存在，则创建文件
-		fmt.Println("配置文件不存在，正在生成...")
+		log.Warning("配置文件不存在，正在生成...")
 		configData, err := toml.Marshal(defaultConfig)
 		if err != nil {
+			log.Errorf("生成配置文件失败: %v", err)
 			return fmt.Errorf("生成配置文件失败: %v", err)
 		}
 		err = os.WriteFile(path, configData, 0644)
 		if err != nil {
+			log.Errorf("写入配置文件失败: %v", err)
 			return fmt.Errorf("写入配置文件失败: %v", err)
 		}
-		fmt.Println("配置文件已生成")
+		log.Info("配置文件已生成")
 	} else {
 		// 如果文件存在，则检测并补充缺失的配置项
-		fmt.Println("配置文件已存在，正在检查并更新...")
+		log.Info("配置文件已存在，正在检查并更新...")
 		config, err := loadConfig(path)
 		if err != nil {
 			return err
@@ -132,13 +138,15 @@ func checkAndGenerateConfig(path string) error {
 		updatedConfig := mergeConfig(defaultConfig, *config)
 		configData, err := toml.Marshal(updatedConfig)
 		if err != nil {
+			log.Errorf("更新配置文件失败: %v", err)
 			return fmt.Errorf("更新配置文件失败: %v", err)
 		}
 		err = os.WriteFile(path, configData, 0644)
 		if err != nil {
+			log.Errorf("写入配置文件失败: %v", err)
 			return fmt.Errorf("写入配置文件失败: %v", err)
 		}
-		fmt.Println("配置文件已更新")
+		log.Info("配置文件读取完成")
 	}
 	return nil
 }
@@ -148,10 +156,12 @@ func loadConfig(path string) (*Config, error) {
 	var config Config
 	configData, err := os.ReadFile(path)
 	if err != nil {
+		log.Errorf("读取配置文件失败: %v", err)
 		return nil, fmt.Errorf("读取配置文件失败: %v", err)
 	}
 	err = toml.Unmarshal(configData, &config)
 	if err != nil {
+		log.Errorf("解析配置文件失败: %v", err)
 		return nil, fmt.Errorf("解析配置文件失败: %v", err)
 	}
 	return &config, nil
