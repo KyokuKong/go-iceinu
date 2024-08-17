@@ -1,0 +1,15 @@
+[onebot]
+websocket_connects = ['ws://127.0.0.1:23333']
+access_token = ''
+
+[database]
+sql_connect = 'sqlite:///iceinu.db'
+db_conn_pool = 10
+
+[bot]
+nickname = 'IceInuBot'
+command_prefix = '/'
+superuser = [1234567890]
+auto_update = false
+log_level = 'INFO'
+enable_remote_api = true
