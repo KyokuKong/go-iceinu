@@ -5,76 +5,51 @@ name: release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   tags:
-    - '*'
+    - "v0.*"
+    - "draft-*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22.5'
-        
-    - name: Install dependencies
-      working-directory: ./bot
-      run: go mod tidy
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22.5"
 
-    - name: Build for Linux x64
-      working-directory: ./bot
-      run: GOOS=linux GOARCH=amd64 go build -o build/go-iceinu-linux-amd64-${{ github.ref_name }} .
+      - name: Install dependencies
+        working-directory: ./bot
+        run: go mod tidy
 
-    - name: Build for Windows x64
-      working-directory: ./bot
-      run: GOOS=windows GOARCH=amd64 go build -o build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe .
+      - name: Build for Linux x64
+        working-directory: ./bot
+        run: GOOS=linux GOARCH=amd64 go build -o build/go-iceinu-linux-amd64-${{ github.ref_name }} .
 
-    - name: Upload Linux binary
-      uses: actions/upload-artifact@v3
-      with:
-        name: go-iceinu-linux-amd64-${{ github.ref_name }}
-        path: ./bot/build/go-iceinu-linux-amd64-${{ github.ref_name }}
+      - name: Build for Windows x64
+        working-directory: ./bot
+        run: GOOS=windows GOARCH=amd64 go build -o build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe .
 
-    - name: Upload Windows binary
-      uses: actions/upload-artifact@v3
-      with:
-        name: go-iceinu-windows-amd64-${{ github.ref_name }}
-        path: ./bot/build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-iceinu-linux-amd64-${{ github.ref_name }}
+          path: ./bot/build/go-iceinu-linux-amd64-${{ github.ref_name }}
 
-    - name: Create GitHub Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/create-release@v1
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Windows binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-iceinu-windows-amd64-${{ github.ref_name }}
+          path: ./bot/build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe
 
-    - name: Upload Linux binary to Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bot/build/go-iceinu-linux-amd64-${{ github.ref_name }}
-        asset_name: go-iceinu-linux-amd64-${{ github.ref_name }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload Windows binary to Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bot/build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe
-        asset_name: go-iceinu-windows-amd64-${{ github.ref_name }}.exe
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files:  ./bot/build/*
+          draft: true
+          fail_on_unmatched_files: true
