@@ -1,7 +1,6 @@
-# 这是IceinuBot的配置文件，由程序在初次运行时自动生成
+# 这是IceinuBot的参考配置文件
 # 仓库地址：https://github.com/KyokuKong/go-iceinu
-# 出现修改了配置文件结构的大版本更新时应备份后重新生成该配置文件
-# 你可以在仓库的README.md中找到配置文件模板
+# 你可以在仓库的README.md中找到和这个一样的配置文件
 # ----------------------------------------------------
 
 [onebot] # 与Onebot客户端进行连接时所需的配置
@@ -20,6 +19,12 @@ access_token = ""
 # Iceinu的数据库连接及处理都通过gorm进行，理论上gorm兼容的SQL数据库都可以使用
 # 但是保证可用性的数据库只有PostgreSQL、MySQL以及内置的SQLite
 sql_connect = "sqlite:///iceinu.db"
+# 数据库名称，一般不需要改动
+sql_database = "iceinu"
+# 数据库用户名，一般不需要改动
+sql_username = "iceinubot"
+# 数据库密码，一般不需要改动
+sql_password = "iceinupassword"
 # 连接池上限，设置更多的连接池可以同时向数据库发出更多查询请求，但是会影响性能表现
 # 一般不需要设置的太高
 db_conn_pool = 10

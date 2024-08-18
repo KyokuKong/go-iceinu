@@ -18,8 +18,11 @@ type Config struct {
 		AccessToken       string   `toml:"access_token"`
 	} `toml:"onebot"`
 	Database struct {
-		SqlConnect string `toml:"sql_connect"`
-		DbConnPool int    `toml:"db_conn_pool"`
+		SqlConnect  string `toml:"sql_connect"`
+		SqlDatabase string `toml:"sql_database"`
+		SqlUsername string `toml:"sql_username"`
+		SqlPassword string `toml:"sql_password"`
+		DbConnPool  int    `toml:"db_conn_pool"`
 	} `toml:"database"`
 	Bot struct {
 		Nickname        string  `toml:"nickname"`
@@ -40,11 +43,17 @@ var defaultConfig = Config{
 		AccessToken:       "",
 	},
 	Database: struct {
-		SqlConnect string `toml:"sql_connect"`
-		DbConnPool int    `toml:"db_conn_pool"`
+		SqlConnect  string `toml:"sql_connect"`
+		SqlDatabase string `toml:"sql_database"`
+		SqlUsername string `toml:"sql_username"`
+		SqlPassword string `toml:"sql_password"`
+		DbConnPool  int    `toml:"db_conn_pool"`
 	}{
-		SqlConnect: "sqlite:///iceinu.db",
-		DbConnPool: 10,
+		SqlConnect:  "sqlite:///iceinu.db",
+		SqlDatabase: "iceinu",
+		SqlUsername: "iceinubot",
+		SqlPassword: "iceinupassword",
+		DbConnPool:  10,
 	},
 	Bot: struct {
 		Nickname        string  `toml:"nickname"`
