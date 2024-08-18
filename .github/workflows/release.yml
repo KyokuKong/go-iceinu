@@ -6,11 +6,10 @@ name: release
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  tags:
-    - "v0.*"
-    - "draft-*"
+    tags:
+      - "v0.*"
+      - "draft-*"
+
 
 jobs:
   build:
