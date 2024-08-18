@@ -9,7 +9,6 @@ on:
       - "v0.*"
       - "draft-*"
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,32 +24,50 @@ jobs:
         working-directory: ./bot
         run: go mod tidy
 
-      - name: Build for Linux x64
+      - name: Build for Windows x86
         working-directory: ./bot
-        run: GOOS=linux GOARCH=amd64 go build -o build/go-iceinu-linux-amd64-${{ github.ref_name }} .
+        run: GOOS=windows GOARCH=386 go build -o build/go-iceinu-windows-x86-${{ github.ref_name }}.exe .
 
-      - name: Build for Windows x64
+      - name: Build for Windows amd64
         working-directory: ./bot
         run: GOOS=windows GOARCH=amd64 go build -o build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe .
 
-      - name: Upload Linux binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: go-iceinu-linux-amd64-${{ github.ref_name }}
-          path: ./bot/build/go-iceinu-linux-amd64-${{ github.ref_name }}
+      - name: Build for Windows arm64
+        working-directory: ./bot
+        run: GOOS=windows GOARCH=arm64 go build -o build/go-iceinu-windows-arm64-${{ github.ref_name }}.exe .
 
-      - name: Upload Windows binary
+      - name: Build for Linux x86
+        working-directory: ./bot
+        run: GOOS=linux GOARCH=386 go build -o build/go-iceinu-linux-x86-${{ github.ref_name }} .
+
+      - name: Build for Linux amd64
+        working-directory: ./bot
+        run: GOOS=linux GOARCH=amd64 go build -o build/go-iceinu-linux-amd64-${{ github.ref_name }} .
+
+      - name: Build for Linux arm64
+        working-directory: ./bot
+        run: GOOS=linux GOARCH=arm64 go build -o build/go-iceinu-linux-arm64-${{ github.ref_name }} .
+
+      - name: Build for OSX amd64
+        working-directory: ./bot
+        run: GOOS=darwin GOARCH=amd64 go build -o build/go-iceinu-osx-amd64-${{ github.ref_name }} .
+
+      - name: Build for OSX arm64
+        working-directory: ./bot
+        run: GOOS=darwin GOARCH=arm64 go build -o build/go-iceinu-osx-arm64-${{ github.ref_name }} .
+
+      - name: Upload binaries
         uses: actions/upload-artifact@v3
         with:
-          name: go-iceinu-windows-amd64-${{ github.ref_name }}
-          path: ./bot/build/go-iceinu-windows-amd64-${{ github.ref_name }}.exe
+          name: build-artifacts
+          path: ./bot/build/*
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files:  ./bot/build/*
+          files: ./bot/build/*
+          body: GithubCI自动构建的Release版本，更新内容详见仓库README.md中的更新记录
           draft: true
           fail_on_unmatched_files: true
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
