@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/KyokuKong/go-iceinu/bot/config"
+	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/db"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
 	log "github.com/sirupsen/logrus"
@@ -36,6 +37,16 @@ func main() {
 	// 检测数据库结构是否正确，自动处理数据库中表的缺失/缺列等问题
 	db.MigrateTables()
 
+	// 启动Bot前发送一个初始化成功事件
+	err = core.SendInitializeEvent()
+	if err != nil {
+		return
+	}
+
+	err = core.CreateUser(2913844577)
+	if err != nil {
+		return
+	}
 	// 启动Bot
 	zerobot.LaunchQQBot()
 }

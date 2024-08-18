@@ -87,6 +87,11 @@ func GetDatabaseConnection() (*sql.Conn, error) {
 	return conn, nil
 }
 
+// GetORM 获取数据库引擎
+func GetORM() *gorm.DB {
+	return DB
+}
+
 // MigrateTables 自动迁移表结构
 func MigrateTables() {
 	db := DB
