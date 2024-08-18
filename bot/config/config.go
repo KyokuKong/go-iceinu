@@ -6,7 +6,7 @@ import (
 	"os"
 	"reflect"
 	"sync"
-	
+
 	"github.com/pelletier/go-toml/v2"
 	log "github.com/sirupsen/logrus"
 )
@@ -23,7 +23,7 @@ type Config struct {
 		SqlUsername string `toml:"sql_username"`
 		SqlPassword string `toml:"sql_password"`
 		DbConnPool  int    `toml:"db_conn_pool"`
-	} `toml:"database"`
+	} `toml:"db"`
 	Bot struct {
 		Nickname        string  `toml:"nickname"`
 		CommandPrefix   string  `toml:"command_prefix"`
@@ -99,24 +99,24 @@ func GetConfig() (*Config, error) {
 func SaveConfig() error {
 	mu.Lock()
 	defer mu.Unlock()
-	
+
 	if instance == nil {
 		log.Error("没有初始化配置文件")
 		return fmt.Errorf("没有初始化配置文件")
 	}
-	
+
 	configData, err := toml.Marshal(instance)
 	if err != nil {
 		log.Errorf("序列化配置失败: %v", err)
 		return fmt.Errorf("序列化配置失败: %v", err)
 	}
-	
+
 	err = os.WriteFile(configPath, configData, 0644)
 	if err != nil {
 		log.Errorf("写入配置文件失败: %v", err)
 		return fmt.Errorf("写入配置文件失败: %v", err)
 	}
-	
+
 	log.Info("配置更新完成")
 	return nil
 }
@@ -179,21 +179,21 @@ func loadConfig(path string) (*Config, error) {
 // mergeConfig 合并配置文件，补充缺失的配置项
 func mergeConfig(defaultConfig, userConfig Config) Config {
 	mergedConfig := userConfig
-	
+
 	// 使用反射检查并补充缺失的配置项
 	reflectDefaultConfig := reflect.ValueOf(defaultConfig)
 	reflectUserConfig := reflect.ValueOf(userConfig)
 	reflectMergedConfig := reflect.ValueOf(&mergedConfig).Elem()
-	
+
 	for i := 0; i < reflectDefaultConfig.NumField(); i++ {
 		defaultField := reflectDefaultConfig.Field(i)
 		userField := reflectUserConfig.Field(i)
 		mergedField := reflectMergedConfig.Field(i)
-		
+
 		if userField.IsZero() {
 			mergedField.Set(defaultField)
 		}
 	}
-	
+
 	return mergedConfig
 }

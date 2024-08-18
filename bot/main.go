@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/KyokuKong/go-iceinu/bot/config"
-	"github.com/KyokuKong/go-iceinu/bot/core"
+	"github.com/KyokuKong/go-iceinu/bot/db"
+	"github.com/KyokuKong/go-iceinu/bot/zerobot"
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 )
@@ -30,7 +31,11 @@ func main() {
 	case "WARN":
 		log.SetLevel(log.WarnLevel)
 	}
+	// 初始化数据库连接，设置连接池数量
+	db.InitDatabaseConnectionPool()
+	// 检测数据库结构是否正确，自动处理数据库中表的缺失/缺列等问题
+	db.MigrateTables()
 
 	// 启动Bot
-	core.LaunchQQBot()
+	zerobot.LaunchQQBot()
 }

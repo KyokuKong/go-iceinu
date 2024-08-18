@@ -1,5 +1,9 @@
-# Go-Iceinu ![example workflow](https://github.com/KyokuKong/go-iceinu/actions/workflows/go.yml/badge.svg)
-[![forthebadge](https://forthebadge.com/images/badges/made-with-go.svg)](https://forthebadge.com)
+# Go-Iceinu 
+
+![Static Badge](https://img.shields.io/badge/Go-1.22.5+-blue?logo=go)
+![Static Badge](https://img.shields.io/badge/Python-3.11%2B-green?logo=python)
+![workflow](https://github.com/KyokuKong/go-iceinu/actions/workflows/go.yml/badge.svg) 
+[![CodeTime Badge](https://img.shields.io/endpoint?style=flat&color=222&url=https%3A%2F%2Fapi.codetime.dev%2Fshield%3Fid%3D25986%26project%3Dgo-iceinu-bot%26in=0)](https://codetime.dev)
 
 基于[Zerobot](https://github.com/wdvxdr1123/ZeroBot)框架开发的QQ Bot，暂时还在开发中。
 
@@ -47,7 +51,7 @@ go build
 `v1.0.1`
 - [x] 配置文件生成/读取
 - [x] 日志输出
-- [ ] 数据库连接
+- [x] 数据库连接/初始化
 - [ ] 数据库处理/提取/交互
 - [x] ZeroBot初始化及启动
 - [x] CI配置、自动构建
@@ -145,3 +149,9 @@ enable_remote_api = true
 ## API文档
 
 详见[API文档](./API文档.md)
+
+## 更新日志
+
+`v1.0.1`
+
+- 欸，还没更呢
