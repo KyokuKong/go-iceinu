@@ -1,4 +1,4 @@
-# Go-Iceinu
+# Go-Iceinu ![example workflow](https://github.com/KyokuKong/go-iceinu/actions/workflows/go.yml/badge.svg)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-go.svg)](https://forthebadge.com)
 
 基于[Zerobot](https://github.com/wdvxdr1123/ZeroBot)框架开发的QQ Bot，暂时还在开发中。
@@ -27,7 +27,7 @@ Done
 
 `Go-Iceinu`提供了一套完整的、RESTful的管理API，可以通过其进行鉴权并远程管理bot的各项功能。
 
-你也可以直接使用`Iceinu-Manager`，一个使用Python编写的命令行管理工具，封装了管理API的各项功能。
+你也可以直接使用[Iceinu Manager](./cli/README.md)，一个使用Python编写的命令行管理工具，封装了管理API的各项功能。
 
 ## 编译
 
@@ -50,7 +50,7 @@ go build
 - [ ] 数据库连接
 - [ ] 数据库处理/提取/交互
 - [x] ZeroBot初始化及启动
-- [ ] CI配置、自动构建
+- [x] CI配置、自动构建
 
 ## 数据库结构
 

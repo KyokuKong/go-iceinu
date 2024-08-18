@@ -30,7 +30,7 @@ func main() {
 	case "WARN":
 		log.SetLevel(log.WarnLevel)
 	}
-	
+
 	// 启动Bot
 	core.LaunchQQBot()
 }

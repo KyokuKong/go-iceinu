@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/pelletier/go-toml/v2 v2.2.2
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
 	github.com/wdvxdr1123/ZeroBot v1.7.4
 )

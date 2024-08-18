@@ -1,7 +1,7 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: build by commit
+name: 自动构建
 
 on:
   push:
@@ -26,14 +26,20 @@ jobs:
 
     - name: Build for Linux x64
       working-directory: ./bot
-      run: GOOS=linux GOARCH=amd64 go build -o build/myapp-linux .
+      run: GOOS=linux GOARCH=amd64 go build -o build/go-iceinu-linux-amd64 .
 
     - name: Build for Windows x64
       working-directory: ./bot
-      run: GOOS=windows GOARCH=amd64 go build -o build/myapp-windows.exe .
+      run: GOOS=windows GOARCH=amd64 go build -o build/go-iceinu-windows-amd64.exe .
 
-    - name: Upload artifacts
+    - name: Upload Linux binary
       uses: actions/upload-artifact@v3
       with:
-        name: build-artifacts
-        path: ./bot/build/
+        name: go-iceinu-linux-amd64
+        path: ./bot/build/go-iceinu-linux-amd64
+
+    - name: Upload Windows binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: go-iceinu-windows-amd64
+        path: ./bot/build/go-iceinu-windows-amd64.exe
