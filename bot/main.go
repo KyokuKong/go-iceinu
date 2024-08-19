@@ -4,19 +4,13 @@ import (
 	"github.com/KyokuKong/go-iceinu/bot/config"
 	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/db"
+	"github.com/KyokuKong/go-iceinu/bot/plugins"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
 	log "github.com/sirupsen/logrus"
-	easy "github.com/t-tomalak/logrus-easy-formatter"
 )
 
 func main() {
 	// 程序主函数，在这里运行整个初始化以及启动流程
-	// 初始化日志管理模块
-	log.SetFormatter(&easy.Formatter{
-		TimestampFormat: "2006-01-02 15:04:05",
-		LogFormat:       "[%time%][%lvl%]: %msg% \n",
-	})
-	log.SetLevel(log.InfoLevel)
 	// 初始化配置模块
 	cfg, err := config.GetConfig()
 	if err != nil {
@@ -37,16 +31,15 @@ func main() {
 	// 检测数据库结构是否正确，自动处理数据库中表的缺失/缺列等问题
 	db.MigrateTables()
 
+	// 注册插件管理器
+	plugins.RegisterManager()
+
 	// 启动Bot前发送一个初始化成功事件
 	err = core.SendInitializeEvent()
 	if err != nil {
 		return
 	}
 
-	err = core.CreateUser(2913844577)
-	if err != nil {
-		return
-	}
 	// 启动Bot
 	zerobot.LaunchQQBot()
 }

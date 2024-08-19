@@ -92,30 +92,28 @@ func GetORM() *gorm.DB {
 	return DB
 }
 
+// migrateTable 用于检查指定表是否符合需求并自动创建/迁移的函数
+func migrateTable(db *gorm.DB, tableName string, model interface{}) {
+	// 检查表是否存在
+	if !db.Migrator().HasTable(model) {
+		log.Infof("表 '%s' 不存在，正在创建...", tableName)
+		if err := db.Migrator().CreateTable(model); err != nil {
+			log.Fatalf("创建表 '%s' 失败: %v", tableName, err)
+		}
+	} else {
+		log.Infof("表 '%s' 存在，正在更新...", tableName)
+		if err := db.AutoMigrate(model); err != nil {
+			log.Fatalf("更新表 '%s' 失败: %v", tableName, err)
+		}
+	}
+}
+
 // MigrateTables 自动迁移表结构
 func MigrateTables() {
 	db := DB
-	// 检查并创建/更新 users 表
-	if !db.Migrator().HasTable(&models.User{}) {
-		log.Info("表 'users' 不存在，正在创建...")
-		if err := db.Migrator().CreateTable(&models.User{}); err != nil {
-			log.Fatalf("创建表 'users' 失败: %v", err)
-		}
-	} else {
-		if err := db.AutoMigrate(&models.User{}); err != nil {
-			log.Fatalf("更新表 'users' 失败: %v", err)
-		}
-	}
 
-	// 检查并创建/更新 events_log 表
-	if !db.Migrator().HasTable(&models.EventLog{}) {
-		log.Info("表 'events_log' 不存在，正在创建...")
-		if err := db.Migrator().CreateTable(&models.EventLog{}); err != nil {
-			log.Fatalf("创建表 'events_log' 失败: %v", err)
-		}
-	} else {
-		if err := db.AutoMigrate(&models.EventLog{}); err != nil {
-			log.Fatalf("更新表 'events_log' 失败: %v", err)
-		}
-	}
+	// 为每个表调用通用的迁移函数
+	migrateTable(db, "users", &models.User{})
+	migrateTable(db, "events_log", &models.EventLog{})
+	migrateTable(db, "plugins", &models.Plugins{})
 }

@@ -30,3 +30,8 @@ type EventLog struct {
 	Type        string    `gorm:"type:text"`
 	Event       string    `gorm:"type:json"`
 }
+
+type Plugins struct {
+	PluginId  string `gorm:"type:text;primarykey"`
+	IsEnabled bool   `gorm:"type:boolean;default:true"`
+}

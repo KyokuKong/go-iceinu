@@ -11,6 +11,18 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func init() {
+	log.SetOutput(os.Stdout)
+
+	log.SetFormatter(&log.TextFormatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+		FullTimestamp:   true,
+		ForceColors:     true,
+		PadLevelText:    true,
+	})
+	log.SetLevel(log.InfoLevel)
+}
+
 // Config 代表配置文件的结构
 type Config struct {
 	Onebot struct {

@@ -8,6 +8,17 @@ import (
 	"github.com/wdvxdr1123/ZeroBot/driver"
 )
 
+var engine *zero.Engine
+
+func init() {
+	engine = zero.New()
+}
+
+// GetBotEngine 获取自动初始化的机器人Engine
+func GetBotEngine() *zero.Engine {
+	return engine
+}
+
 func LaunchQQBot() {
 	cfg, _ := config.GetConfig()
 	// 创建一个空的driver列表
