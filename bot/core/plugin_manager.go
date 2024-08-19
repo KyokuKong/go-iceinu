@@ -1,4 +1,4 @@
-package plugins
+package core
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 
 // Plugin 定义插件接口，插件需要继承这个接口
 type Plugin interface {
-	PluginInfos() (string, string, string)
+	PluginInfos() (string, string, string, string)
 	PluginCommands()
 }
 
@@ -46,7 +46,7 @@ func CheckPluginInDB(pluginName string) (bool, error) {
 
 // RegisterPlugin 插件注册函数，插件需要在init()函数中主动调用这个插件来被注册
 func RegisterPlugin(plugin Plugin) {
-	id, _, _ := plugin.PluginInfos()
+	id, _, _, _ := plugin.PluginInfos()
 	pluginRegistry[id] = plugin
 }
 

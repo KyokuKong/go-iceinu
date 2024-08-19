@@ -3,6 +3,7 @@ package plugins
 import (
 	"fmt"
 
+	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
@@ -10,22 +11,26 @@ import (
 
 type ExamplePlugin struct{}
 
-func (p *ExamplePlugin) PluginInfos() (string, string, string) {
-	return "iceinu-example-plugin", "0.0.1", "这是iceinu bot的示例插件，没有任何功能"
+func (p *ExamplePlugin) PluginInfos() (string, string, string, string) {
+	var pluginId = "iceinu-example-plugin"              // 插件id，不能重复
+	var pluginVersion = "0.0.1"                         // 插件版本
+	var pluginIntroduction = "这是iceinu bot的示例插件，没有任何功能" // 插件简介
+	var pluginDeveloper = "Kyoku"                       // 插件开发者
+	return pluginId, pluginVersion, pluginIntroduction, pluginDeveloper
 }
 
 func (p *ExamplePlugin) PluginCommands() {
 	// 调用Bot引擎
 	engine := zerobot.GetBotEngine()
 	// 编写插件命令实现
-	engine.OnFullMatch("iceinu").Handle(func(ctx *zero.Ctx) {
+	engine.OnFullMatch("go-iceinu").Handle(func(ctx *zero.Ctx) {
 		fl := ctx.GetFriendList()
 		fmt.Println(fl.String())
-		ctx.SendChain(message.Text("欢迎使用iceinu 冰犬Bot"))
+		ctx.SendChain(message.Text("Powered by Go-Iceinu, star the project on Github!\nhttps://github.com/kyokukong/go-iceinu"))
 	})
 }
 
 func init() {
 	// 触发插件注册
-	RegisterPlugin(&ExamplePlugin{})
+	core.RegisterPlugin(&ExamplePlugin{})
 }

@@ -9,7 +9,7 @@
 
 ## 简介
 
-使用go语言编写，分发二进制文件，部署简易，依赖无忧，同时享受更快的响应速度，更好的性能表现。
+使用go语言编写，分发二进制文件，部署简易，依赖无忧，同时享受更快的响应速度（如果QQ不抽风），更好的性能表现。
 
 `IceInu`是一个跨群聊的QQ机器人，包含针对私聊和群聊可用的功能和高度可定义的使用体验。
 
@@ -17,7 +17,7 @@
 
 在部署`iceinu-bot`前，你需要准备如下环境：
 - 一个`PostgreSQL`数据库， 不过也可以直接使用内置的`SQLite`嵌入式数据库（但是可能会在数据量变大之后遇到显著的I/O瓶颈）
-- 一个支持`Onebot v11`协议的客户端实现（如`Lagrange`，`Napcat`等）
+- 一个支持`Onebot v11`协议的客户端实现（如[Lagrange](https://lagrangedev.github.io/Lagrange.Doc/)，[Napcat](https://napneko.github.io/zh-CN/)等）
 
 然后可以通过CI获取最新的`Go-Iceinu`自动构建。
 
@@ -37,7 +37,7 @@ Done
 
 ```shell
 git clone git@github.com:KyokuKong/go-iceinu.git
-cd go-iceinu-bot
+cd go-iceinu
 go mod tidy
 go build
 ```
@@ -96,6 +96,15 @@ go build
 | enviroment  | bigint    | 事件的发生环境，如在群聊则为对应的群号，如在私聊则为0          |
 | type        | text      | 事件类型，方便快速分类检索                        |
 | event       | json      | 使用json类型进行序列化存储的事件内容，每个类型的事件有对应的固定格式 |
+
+### plugins
+存储插件启用状态的表，用于缓存用户设置的插件启用/关闭状态
+
+| 列名         | 类型   | 备注                     |
+|------------|------|------------------------|
+| plugin_id  | text | 插件注册时使用的id             |
+| is_enabled | bool | 插件当前的启用状态，默认生成记录时为Ture |
+
 
 ## 配置文件示例
 
@@ -157,6 +166,20 @@ enable_remote_api = true
 ## API文档
 
 详见[API文档](./API文档.md)
+
+## Q&A
+
+### Q：这个Bot有什么特色功能吗？
+
+A：暂时没有，毕竟目前来看（2024年8月末）这个东西的完成度实在是低的可怜。
+
+### Q：为什么用Go写QQ Bot，想不开吗？
+
+A：是的，除了用Go写的Bot会比其他框架更快之外我想不到任何优点，用Go写很大程度上出于自己闲的发慌以及学习Go的需求。
+
+### Q：无法从外部加载插件包吗？
+
+A：可能**未来**会增加在linux/macos平台上的外部插件管理，因为目前受限于go的plugin模块的特性，只能在linux/macos上导入外部的.so动态链接库，所以插件系统的应用非常受限。
 
 ## 更新日志
 

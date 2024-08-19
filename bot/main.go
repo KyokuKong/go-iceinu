@@ -32,7 +32,8 @@ func main() {
 	db.MigrateTables()
 
 	// 注册插件管理器
-	plugins.RegisterManager()
+	plugins.InitPlugins()
+	core.RegisterManager()
 
 	// 启动Bot前发送一个初始化成功事件
 	err = core.SendInitializeEvent()
