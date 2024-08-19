@@ -21,3 +21,4 @@
 go.work
 bot/config.toml
 bot/iceinu.db
+cli/poetry.lock

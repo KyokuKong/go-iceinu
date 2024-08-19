@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "iceinu-manager"
+version = "0.1.0"
+description = ""
+authors = ["Kyoku <hf4develop@163.com>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+prompt-toolkit = "^3.0.47"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
