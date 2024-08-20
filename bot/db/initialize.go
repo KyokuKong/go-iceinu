@@ -9,6 +9,7 @@ import (
 
 	"github.com/KyokuKong/go-iceinu/bot/config"
 	"github.com/KyokuKong/go-iceinu/bot/models"
+	"github.com/KyokuKong/go-iceinu/bot/utils"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -26,19 +27,19 @@ func InitDatabaseConnectionPool() {
 
 	switch {
 	case cfg.Database.SqlConnect[:6] == "sqlite":
-		log.Info("当前使用的数据库类型为：SQLite")
+		log.Infof("当前使用的数据库类型为：%sSQLite%s", utils.Cyan, utils.ResetColor)
 		// 自动切片，由于GORM不支持读sqlite开头的URL
 		dsn = cfg.Database.SqlConnect[10:]
 		log.Debugf("目标数据库URL：%s", dsn)
 		dialector = sqlite.Open(dsn)
 	case cfg.Database.SqlConnect[:8] == "postgres":
-		log.Info("当前使用的数据库类型为：PostgreSQL")
+		log.Infof("当前使用的数据库类型为：%sPostgreSQL%s", utils.LightGreen, utils.ResetColor)
 		dsn = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
 			cfg.Database.SqlUsername, cfg.Database.SqlPassword, cfg.Database.SqlConnect[11:], cfg.Database.SqlDatabase)
 		log.Debugf("目标数据库URL：%s", dsn)
 		dialector = postgres.Open(dsn)
 	case cfg.Database.SqlConnect[:5] == "mysql":
-		log.Info("当前使用的数据库类型为：MySQL")
+		log.Infof("当前使用的数据库类型为：%sMySQL%s", utils.LightBlue, utils.ResetColor)
 		dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			cfg.Database.SqlUsername, cfg.Database.SqlPassword, cfg.Database.SqlConnect[7:], cfg.Database.SqlDatabase)
 		log.Debugf("目标数据库URL：%s", dsn)

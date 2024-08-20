@@ -1,9 +1,8 @@
 package plugins
 
 import (
-	"fmt"
-
 	"github.com/KyokuKong/go-iceinu/bot/core"
+	"github.com/KyokuKong/go-iceinu/bot/models"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
@@ -23,11 +22,24 @@ func (p *ExamplePlugin) PluginCommands() {
 	// 调用Bot引擎
 	engine := zerobot.GetBotEngine()
 	// 编写插件命令实现
-	engine.OnFullMatch("go-iceinu").Handle(func(ctx *zero.Ctx) {
-		fl := ctx.GetFriendList()
-		fmt.Println(fl.String())
-		ctx.SendChain(message.Text("Powered by Go-Iceinu, star the project on Github!\nhttps://github.com/kyokukong/go-iceinu"))
+	engine.OnCommand("go-iceinu").Handle(func(ctx *zero.Ctx) {
+		// core.PrintHelpList()
+		ctx.SendChain(message.Text("Powered by Go-Iceinu, star the project on Github!\nhttps://github.com/KyokuKong/go-iceinu"))
 	})
+}
+
+func (p *ExamplePlugin) PluginHelps() []models.CommandHelp {
+	return []models.CommandHelp{
+		{
+			IsShown:     false,
+			CommandName: "go-iceinu",
+			Usage:       "go-iceinu",
+			Description: "触发冰犬 bot 的调试信息",
+			Flags: map[string]string{
+				"-v": "显示版本信息",
+			},
+		},
+	}
 }
 
 func init() {
