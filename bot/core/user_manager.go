@@ -3,14 +3,14 @@ package core
 import (
 	"errors"
 	"time"
-
+	
 	"github.com/KyokuKong/go-iceinu/bot/db"
 	"github.com/KyokuKong/go-iceinu/bot/models"
 	"gorm.io/gorm"
 )
 
 // CreateUser 创建新用户
-func CreateUser(qid int64) error {
+func CreateUser(qid int64) (*models.User, error) {
 	newUser := &models.User{
 		QID:          qid,
 		Nickname:     "",
@@ -28,14 +28,14 @@ func CreateUser(qid int64) error {
 	}
 	result := db.DB.Create(newUser)
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
-	return nil
+	return newUser, nil
 }
 
 // DeleteUser 根据 QID 删除用户
 func DeleteUser(qid int64) error {
-	result := db.DB.Delete(&models.User{}, "qid = ?", qid)
+	result := db.DB.Delete(&models.User{}, "q_id = ?", qid)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -54,16 +54,20 @@ func UpdateUser(user *models.User) error {
 // GetUserByQID 根据 QID 获取用户数据，如果用户不存在则返回两个空值
 func GetUserByQID(qid int64) (*models.User, error) {
 	var user models.User
-
+	
 	// 搜索用户
-	result := db.DB.First(&user, "qid = ?", qid)
+	result := db.DB.First(&user, "q_id = ?", qid)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		// 用户不存在，返回空值，接受这个空值来创建新用户
-		return nil, nil
+		// 用户不存在，创建新用户
+		user, err := CreateUser(qid)
+		if err != nil {
+			return nil, err
+		}
+		return user, nil
 	} else if result.Error != nil {
 		return nil, result.Error
 	}
-
+	
 	// 返回找到的用户数据
 	return &user, nil
 }
