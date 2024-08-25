@@ -1,6 +1,8 @@
 package plugins
 
 import (
+	"fmt"
+
 	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/models"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
@@ -18,26 +20,37 @@ func (p *BankPlugin) PluginInfos() (string, string, string, string) {
 	return pluginId, pluginVersion, pluginIntroduction, pluginDeveloper
 }
 
+type Bank struct {
+}
+
 func (p *BankPlugin) PluginCommands() {
 	// 调用Bot引擎
 	engine := zerobot.GetBotEngine()
 	// 编写插件命令实现
-	engine.OnCommand("go-iceinu").Handle(func(ctx *zero.Ctx) {
-		// core.PrintHelpList()
-		ctx.SendChain(message.Text("Powered by Go-Iceinu, star the project on Github!\nhttps://github.com/KyokuKong/go-iceinu"))
+	engine.OnCommand("bank").Handle(func(ctx *zero.Ctx) {
+		// 获取用户信息
+		user, _ := core.GetUserByQID(ctx.Event.UserID)
+		// 获取用户的银币数量
+		silver := user.Silver
+		// 获取用户的金币数量
+		gold := user.Gold
+		// 获取用户的门票数量
+		ticket := user.Ticket
+		// 发送消息
+		ctx.SendChain(
+			message.Text("Iceinu Bank\n>>>\n"), message.At(ctx.Event.UserID), message.Text(fmt.Sprintf("\n你身上现在有：\n%d银币，%d金币，%d兑换券", silver, gold, ticket)),
+		)
 	})
 }
 
 func (p *BankPlugin) PluginHelps() []models.CommandHelp {
 	return []models.CommandHelp{
 		{
-			IsShown:     false,
-			CommandName: "go-iceinu",
-			Usage:       "go-iceinu",
-			Description: "触发冰犬 bot 的调试信息",
-			Flags: map[string]string{
-				"-v": "显示版本信息",
-			},
+			IsShown:     true,
+			CommandName: "bank",
+			Usage:       fmt.Sprintf("%sbank", cfg.Bot.CommandPrefix),
+			Description: "查看你身上的货币数量",
+			Flags:       map[string]string{},
 		},
 	}
 }

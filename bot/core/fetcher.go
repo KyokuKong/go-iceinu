@@ -10,7 +10,7 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
-type systemInfo struct {
+type SystemInfo struct {
 	CPU           string
 	Cores         string
 	Memory        string
@@ -22,11 +22,11 @@ type systemInfo struct {
 
 var (
 	once    sync.Once
-	sysInfo systemInfo
+	sysInfo SystemInfo
 )
 
 // GetFetch 获取基本系统信息
-func GetFetch() systemInfo {
+func GetFetch() SystemInfo {
 	once.Do(func() {
 		cpuInfo, err := cpu.Info()
 		if err != nil || len(cpuInfo) == 0 {
@@ -38,7 +38,7 @@ func GetFetch() systemInfo {
 		totalMemory, _ := mem.VirtualMemory()
 		hostInfo, _ := host.Info()
 
-		sysInfo = systemInfo{
+		sysInfo = SystemInfo{
 			CPU:           cpuInfo[0].ModelName,
 			Cores:         fmt.Sprintf("%dc%dt", physicalCores, logicalCores),
 			Memory:        fmt.Sprintf("%.2f GB", float64(totalMemory.Total)/1e9),

@@ -14,7 +14,7 @@ type FetchPlugin struct{}
 
 func (p *FetchPlugin) PluginInfos() (string, string, string, string) {
 	var pluginId = "iceinu-fetch-plugin"     // 插件id，不能重复
-	var pluginVersion = "1.0.0"              // 插件版本
+	var pluginVersion = "1.0.1"              // 插件版本
 	var pluginIntroduction = "用于展示系统运行信息的插件" // 插件简介
 	var pluginDeveloper = "Kyoku"            // 插件开发者
 	return pluginId, pluginVersion, pluginIntroduction, pluginDeveloper
@@ -26,7 +26,7 @@ func (p *FetchPlugin) PluginCommands() {
 	// 编写插件命令实现
 	engine.OnCommand("fetch").Handle(func(ctx *zero.Ctx) {
 		fetchInfo := core.GetFetch()
-		fetchText := fmt.Sprintf("Iceinu 运行信息\n>>>\n处理器：%s\n核心数：%s\n运行频率：%s\n总内存：%s\n系统类型：%s\n系统名称：%s\n内核版本：%s", fetchInfo.CPU, fetchInfo.Cores, fetchInfo.Frequency, fetchInfo.Memory, fetchInfo.SystemType, fetchInfo.Platform, fetchInfo.KernelVersion)
+		fetchText := fmt.Sprintf("Iceinu Fetch\n>>>\n处理器：%s\n核心数：%s\n运行频率：%s\n总内存：%s\n系统类型：%s\n系统名称：%s\n内核版本：%s", fetchInfo.CPU, fetchInfo.Cores, fetchInfo.Frequency, fetchInfo.Memory, fetchInfo.SystemType, fetchInfo.Platform, fetchInfo.KernelVersion)
 		ctx.SendChain(message.Text(fetchText))
 	})
 }
