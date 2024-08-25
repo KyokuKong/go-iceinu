@@ -25,6 +25,7 @@ var (
 	sysInfo systemInfo
 )
 
+// GetFetch 获取基本系统信息
 func GetFetch() systemInfo {
 	once.Do(func() {
 		cpuInfo, err := cpu.Info()
