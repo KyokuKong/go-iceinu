@@ -35,6 +35,10 @@ func main() {
 	plugins.InitPlugins()
 	core.RegisterManager()
 
+	// 临时，测试插件
+	res, _ := core.GetPluginBannedGroups("iceinu-example-plugin")
+	log.Info(res)
+
 	// 启动Bot前发送一个初始化成功事件
 	err = core.SendInitializeEvent()
 	if err != nil {

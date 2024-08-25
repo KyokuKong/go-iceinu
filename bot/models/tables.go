@@ -32,6 +32,7 @@ type EventLog struct {
 }
 
 type Plugins struct {
-	PluginId  string `gorm:"type:text;primarykey"`
-	IsEnabled bool   `gorm:"type:boolean;default:true"`
+	PluginId       string `gorm:"type:text;primarykey"`
+	IsEnabled      bool   `gorm:"type:boolean;default:true"`
+	BannedInGroups string `gorm:"type:json"`
 }

@@ -3,7 +3,7 @@ package plugins
 import (
 	"fmt"
 	"strconv"
-	
+
 	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/models"
 	"github.com/KyokuKong/go-iceinu/bot/zerobot"
@@ -22,17 +22,16 @@ var roleNames = map[int]string{
 }
 
 func (p *RolesPlugin) PluginInfos() (string, string, string, string) {
-	var pluginId = "iceinu-roles-manager-plugin"    // 插件id，不能重复
-	var pluginVersion = "1.0.1"                     // 插件版本
-	var pluginIntroduction = "用于进行权限管理插件" // 插件简介
-	var pluginDeveloper = "Kyoku"                   // 插件开发者
+	var pluginId = "iceinu-roles-manager-plugin" // 插件id，不能重复
+	var pluginVersion = "1.0.1"                  // 插件版本
+	var pluginIntroduction = "用于进行权限管理插件"        // 插件简介
+	var pluginDeveloper = "Kyoku"                // 插件开发者
 	return pluginId, pluginVersion, pluginIntroduction, pluginDeveloper
 }
 
 func (p *RolesPlugin) PluginCommands() {
 	// 调用Bot引擎
 	engine := zerobot.GetBotEngine()
-	
 	// getrole命令实现
 	engine.OnRegex(fmt.Sprintf(`^%sgetrole(?:\s+(\S+))?$`, cfg.Bot.CommandPrefix)).Handle(func(ctx *zero.Ctx) {
 		regexMatched := ctx.State["regex_matched"].([]string)
@@ -57,22 +56,22 @@ func (p *RolesPlugin) PluginCommands() {
 			}
 		}
 	})
-	
+
 	// setrole命令实现
 	engine.OnRegex(fmt.Sprintf(`^%ssetrole\s+(\d+)\s+(\d+)$`, cfg.Bot.CommandPrefix)).Handle(func(ctx *zero.Ctx) {
 		regexMatched := ctx.State["regex_matched"].([]string)
 		targetID, _ := strconv.ParseInt(regexMatched[1], 10, 64)
 		newRole, _ := strconv.Atoi(regexMatched[2])
-		
+
 		// 获取操作者和目标用户的权限等级
 		operatorRoleLevel, _ := core.GetUserRole(ctx.Event.UserID)
-		
+
 		// 检查是否尝试对自己进行操作
 		if ctx.Event.UserID == targetID {
 			ctx.SendChain(message.At(ctx.Event.UserID), message.Text(" 你不能对自己的权限组进行修改"))
 			return
 		}
-		
+
 		// 检查权限
 		if operatorRoleLevel > int16(newRole) || (operatorRoleLevel == 3 && int16(newRole) == 3) {
 			// 操作者权限高于目标权限 或者 操作者和目标用户均为超级管理员

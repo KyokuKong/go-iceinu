@@ -3,7 +3,7 @@ package plugins
 import (
 	"fmt"
 	"strconv"
-	
+
 	"github.com/KyokuKong/go-iceinu/bot/config"
 	"github.com/KyokuKong/go-iceinu/bot/core"
 	"github.com/KyokuKong/go-iceinu/bot/models"
@@ -17,27 +17,26 @@ type HelpPlugin struct{}
 var cfg, _ = config.GetConfig()
 
 func (p *HelpPlugin) PluginInfos() (string, string, string, string) {
-	var pluginId = "iceinu-help-plugin"               // 插件id，不能重复
-	var pluginVersion = "1.0.0"                       // 插件版本
+	var pluginId = "iceinu-help-plugin"    // 插件id，不能重复
+	var pluginVersion = "1.0.0"            // 插件版本
 	var pluginIntroduction = "用于展示帮助信息的插件" // 插件简介
-	var pluginDeveloper = "Kyoku"                     // 插件开发者
+	var pluginDeveloper = "Kyoku"          // 插件开发者
 	return pluginId, pluginVersion, pluginIntroduction, pluginDeveloper
 }
 
 func (p *HelpPlugin) PluginCommands() {
 	// 调用Bot引擎
 	engine := zerobot.GetBotEngine()
-	
 	// 动态生成正则表达式，支持命令前缀
 	engine.OnRegex(fmt.Sprintf(`^%s(help|帮助)(?:\s+(\S+))?$`, cfg.Bot.CommandPrefix)).Handle(func(ctx *zero.Ctx) {
 		regexMatched := ctx.State["regex_matched"].([]string)
-		
+
 		// 获取帮助信息列表
 		helpList := core.GetHelpList()
 		totalItems := len(helpList)
 		itemsPerPage := 10
 		totalPages := (totalItems + itemsPerPage - 1) / itemsPerPage
-		
+
 		// 如果没有传入参数，显示第一页的帮助信息
 		if regexMatched[2] == "" {
 			page := 1
@@ -74,7 +73,7 @@ func getPaginatedHelp(helpList []models.CommandHelp, page int, itemsPerPage int,
 	if endIndex > len(helpList) {
 		endIndex = len(helpList)
 	}
-	
+
 	var helpText = fmt.Sprintf("Iceinu Help \n(第 %d/%d 页)\n<>为必填参数，{}为可选参数\n>>>\n", page, totalPages)
 	for _, help := range helpList[startIndex:endIndex] {
 		helpText += fmt.Sprintf("%s   %s\n", help.Usage, help.Description)
@@ -90,7 +89,7 @@ func getHelpForCommand(helpList []models.CommandHelp, command string) string {
 	for _, help := range helpList {
 		if help.CommandName == command {
 			helpText := fmt.Sprintf("%s>>>\n用法: %s\n描述: %s\n", help.CommandName, help.Usage, help.Description)
-			
+
 			// 检查是否有可用的 flag 列表
 			if len(help.Flags) > 0 {
 				helpText += "可用参数:\n"

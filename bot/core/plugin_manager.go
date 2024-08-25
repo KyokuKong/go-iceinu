@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
 	"sort"
 
@@ -34,8 +35,9 @@ func CheckPluginInDB(pluginName string) (bool, error) {
 		// 插件没有被注册到数据库中，那么添加这个插件
 		log.Infof("检测到了新插件 %s ，将被添加进插件数据库", pluginName)
 		newPlugin := &models.Plugins{
-			PluginId:  pluginName,
-			IsEnabled: true,
+			PluginId:       pluginName,
+			IsEnabled:      true,
+			BannedInGroups: "[]",
 		}
 		result := db.DB.Create(newPlugin)
 		// 将新生成的plugin信息返回
@@ -97,4 +99,51 @@ func PrintHelpList() {
 		log.Infof("命令: %s\n用法: %s\n功能: %s\nFlags: %v\n",
 			help.CommandName, help.Usage, help.Description, help.Flags)
 	}
+}
+
+// GetPluginDetails 获取指定插件的详细信息
+func GetPluginDetails(pluginId string) (*models.Plugins, error) {
+	var plugin models.Plugins
+	// 查询插件是否存在于数据库中
+	result := db.DB.First(&plugin, "plugin_id = ?", pluginId)
+	if result.Error != nil {
+		// 不存在则抛出异常
+		return nil, result.Error
+	}
+	return &plugin, nil
+}
+
+// GetPluginBannedGroups 获取指定插件的禁用群组列表
+func GetPluginBannedGroups(pluginId string) ([]int64, error) {
+	plugin, err := GetPluginDetails(pluginId)
+	if err != nil {
+		return nil, err
+	}
+	var groupIds []int64
+	err = json.Unmarshal([]byte(plugin.BannedInGroups), &groupIds)
+	if err != nil {
+		return nil, err
+	}
+	return groupIds, nil
+}
+
+func UpdatePluginDetails(plugins *models.Plugins) error {
+	result := db.DB.Save(plugins)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func AddPluginBannedGroup(pluginId string, groupId int64) error {
+	var plugin, err = GetPluginDetails(pluginId)
+	if err != nil {
+		return err
+	}
+	var groupIds []int64
+	err = json.Unmarshal([]byte(plugin.BannedInGroups), &groupIds)
+	if err != nil {
+		return err
+	}
+	return nil
 }
