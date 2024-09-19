@@ -5,7 +5,10 @@
 ![workflow](https://github.com/KyokuKong/go-iceinu/actions/workflows/go.yml/badge.svg) 
 [![CodeTime Badge](https://img.shields.io/endpoint?style=flat&color=222&url=https%3A%2F%2Fapi.codetime.dev%2Fshield%3Fid%3D25986%26project%3Dgo-iceinu-bot%26in=0)](https://codetime.dev)
 
+这个仓库已经放弃开发了，请查看全新的Go模块化聊天机器人开发框架[Iceinu](https://github.com/Iceinu-Project/iceinu)，未来会追加新框架的Onebot支持。
+
 基于[Zerobot](https://github.com/wdvxdr1123/ZeroBot)框架开发的QQ Bot，暂时还在开发中。
+
 
 ## 简介
 
